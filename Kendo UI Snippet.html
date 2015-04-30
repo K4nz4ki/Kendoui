@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Kendo UI Snippet</title>
+
+    <link rel="stylesheet" href="http://cdn.kendostatic.com/2015.1.408/styles/kendo.common.min.css">
+    <link rel="stylesheet" href="http://cdn.kendostatic.com/2015.1.408/styles/kendo.rtl.min.css">
+    <link rel="stylesheet" href="http://cdn.kendostatic.com/2015.1.408/styles/kendo.default.min.css">
+    <link rel="stylesheet" href="http://cdn.kendostatic.com/2015.1.408/styles/kendo.dataviz.min.css">
+    <link rel="stylesheet" href="http://cdn.kendostatic.com/2015.1.408/styles/kendo.dataviz.default.min.css">
+    <link rel="stylesheet" href="http://cdn.kendostatic.com/2015.1.408/styles/kendo.mobile.all.min.css">
+
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="http://cdn.kendostatic.com/2015.1.408/js/kendo.all.min.js"></script>
+</head>
+<body>
+  <button data-action="clickme">Click me</button>
+       
+  <div id="dialog"><img src="http://lorempixel.com/400/200" /></div>
+
+<script>
+var windowKendoWindow = {};
+var windowKendoWindowActive = false;
+
+$(function() 
+{
+    var windowOptions = {
+       appendTo: "body",
+       autoFocus: false,
+       width: "18%",
+       height: "80%",
+       pinned: true,
+       title: "MOVE IT !!!",
+       visible: false,
+       activate: function(e)
+       {
+           console.log("activate");
+           windowKendoWindowActive = true;
+           var element = e.sender.element[0];
+           $(element).css('overflow-x', 'hidden');
+       },
+       deactivate: function() {
+           console.log("deactivate");
+           windowKendoWindowActive = false;
+       },
+       resize: function(e) 
+       {
+           console.log("resize");
+           var windowOptionsTemp = {width: null, height: null, top: null, left: null};
+           if (sessionStorage.getItem("windowOptions") != null)
+           {
+               windowOptionsTemp = JSON.parse(sessionStorage.getItem("windowOptions"));
+           }
+           if (typeof e.width != 'undefined' && e.width != null)
+           {
+               windowOptionsTemp.width = e.width;
+           }
+           if (typeof e.height != 'undefined' && e.height != null)
+           {
+               windowOptionsTemp.height = e.height;
+           }
+           var windowSizeOptions = JSON.stringify(windowOptionsTemp);
+           sessionStorage.setItem("windowOptions", windowSizeOptions)
+       }, 
+       dragend: function(e) 
+       {
+           console.log("dragend");
+           var element = e.sender.element[0];
+           var windowOptionsTemp = {width: null, height: null, top: null, left: null};
+           var parentPosition = $(element).parent().position();
+           if (sessionStorage.getItem("windowOptions") != null)
+           {
+               windowOptionsTemp = JSON.parse(sessionStorage.getItem("windowOptions"));
+           }
+           if (typeof parentPosition.top != 'undefined' && parentPosition.top != null)
+           {
+               windowOptionsTemp.top = parentPosition.top;
+           }
+           if (typeof parentPosition.left != 'undefined' && parentPosition.left != null)
+           {
+               windowOptionsTemp.left = parentPosition.left;
+           }
+           var windowSizeOptions = JSON.stringify(windowOptionsTemp);
+           sessionStorage.setItem("windowOptions", windowSizeOptions)
+       }
+   };
+   
+    $("#dialog").kendoWindow(windowOptions);
+    windowKendoWindow = $("#dialog").data("kendoWindow");
+     
+});
+
+/**
+ * open / close button at the latest position if drag & drop or resize.
+ */
+$("button[data-action=clickme]").on("click",function()
+{
+    var minLeft = 0;
+    var maxLeft = $(window).width();
+    if (typeof windowKendoWindowActive == 'undefined' || windowKendoWindowActive == false)
+    {
+        var windowsTopScroll = $(window).scrollTop();
+        optionWindow = 
+        {
+            position: 
+            {
+                top: (windowsTopScroll + 60),
+                left: 15
+            }
+        };
+        if (typeof sessionStorage.getItem("windowOptions") != 'undefined' && sessionStorage.getItem("windowOptions") != null)
+        {
+            var sessionWindowOptions = JSON.parse(sessionStorage.getItem("windowOptions"));
+            if (typeof sessionWindowOptions.width != "undefined" && sessionWindowOptions.width != null)
+            {
+                optionWindow.width = sessionWindowOptions.width;
+            }
+            if (typeof sessionWindowOptions.height != "undefined" && sessionWindowOptions.height != null)
+            {
+                optionWindow.height = sessionWindowOptions.height;
+            }
+            if (typeof sessionWindowOptions.top != "undefined" && sessionWindowOptions.top != null)
+            {
+                optionWindow.position.top = sessionWindowOptions.top;
+            }
+            if (typeof sessionWindowOptions.left != "undefined" && sessionWindowOptions.left != null)
+            {
+                optionWindow.position.left = sessionWindowOptions.left;
+            }
+        }
+        windowKendoWindow.setOptions(optionWindow);
+        windowKendoWindow.open();
+    }
+    else
+    {
+        windowKendoWindow.close();
+    }
+});
+</script>
+</body>
+</html>
