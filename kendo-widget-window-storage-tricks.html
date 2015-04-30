@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Kendo UI Snippet</title>
+    <title>Kendo UI Widget windows storage tricks</title>
 
     <link rel="stylesheet" href="http://cdn.kendostatic.com/2015.1.408/styles/kendo.common.min.css">
     <link rel="stylesheet" href="http://cdn.kendostatic.com/2015.1.408/styles/kendo.rtl.min.css">
@@ -20,6 +20,11 @@
   <div id="dialog"><img src="http://lorempixel.com/400/200" /></div>
 
 <script>
+/**
+ * Exemple d'utilisation des sesssions storage coté navigateur avec une fenêtre Kendoui
+ * Glisser / Déposer et redimenssionner mais conserver toujour vos changements grace au session storage de votre navigateur.
+ * @author <pellegrini.ronan@gmail.com>
+ */
 var windowKendoWindow = {};
 var windowKendoWindowActive = false;
 
